@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true,
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "rootDir": "src",
+        "outDir": "built/esm",
+        "declaration": true,
+        "declarationDir": "built/dts"
+    },
+    "include": ["src/**/*.ts"]
+}
