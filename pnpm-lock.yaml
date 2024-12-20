@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       aisenv:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       misskey-js:
         specifier: 2024.11.1-alpha.0
         version: 2024.11.1-alpha.0
@@ -30,6 +30,15 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.8(@types/node@22.10.2)
+
+  examples/cli:
+    devDependencies:
+      aisenv:
+        specifier: ^0.2.0
+        version: 0.2.0
+      aisenv-mk:
+        specifier: workspace:^
+        version: link:../..
 
 packages:
 
@@ -454,8 +463,8 @@ packages:
   '@vitest/utils@2.1.8':
     resolution: {integrity: sha512-dwSoui6djdwbfFmIgbIjX2ZhIoG7Ex/+xpxyiEgIGzjliY8xGkcpITKTlp6B4MgtGkF2ilvm97cPM96XZaAgcA==}
 
-  aisenv@0.1.0:
-    resolution: {integrity: sha512-YjQrS6FrwUisCzdhlYCI3P6wF1TMuBlEVJeKza/FeorOUi7tWgbiVlGu1io0UAUQD8KFdb5sdtGkijEby5MuEA==}
+  aisenv@0.2.0:
+    resolution: {integrity: sha512-Z7Ap6LWXBmxcZyyrMdCcIDGkWLaG1UX2E7k49mQthnhT/I02zSke7whao9gnipJiWQhBEkYdueM/YDPE0Sqjbw==}
     hasBin: true
 
   assertion-error@2.0.1:
@@ -945,7 +954,7 @@ snapshots:
       loupe: 3.1.2
       tinyrainbow: 1.2.0
 
-  aisenv@0.1.0:
+  aisenv@0.2.0:
     dependencies:
       '@syuilo/aiscript': 0.19.0
 

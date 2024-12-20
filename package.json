@@ -3,6 +3,12 @@
     "version": "0.1.0",
     "description": "",
     "type": "module",
+    "exports": {
+        ".": {
+            "import": "./built/esm/index.js",
+            "types": "./built/dts/index.d.ts"
+        }
+    },
     "scripts": {
         "format": "prettier --write src/**/*.ts tests/**/*.ts *.json",
         "test": "vitest run",
@@ -11,7 +17,7 @@
     "author": "Take-John",
     "license": "AGPL-3.0-only",
     "dependencies": {
-        "aisenv": "^0.1.0",
+        "aisenv": "^0.2.0",
         "misskey-js": "2024.11.1-alpha.0"
     },
     "devDependencies": {

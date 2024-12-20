@@ -1,0 +1,11 @@
+Mk:dialog('error', 'message', 'error')
+Mk:dialog('info', 'message', 'info')
+Mk:dialog('success', 'message', 'success')
+Mk:dialog('warning', 'message', 'warning')
+Mk:dialog('question', 'message', 'question')
+
+Mk:confirm('error', 'message', 'error')
+Mk:confirm('info', 'message', 'info')
+Mk:confirm('success', 'message', 'success')
+Mk:confirm('warning', 'message', 'warning')
+Mk:confirm('question', 'message', 'question')

@@ -1,0 +1,10 @@
+{
+  "name": "cli",
+  "type": "module",
+  "version": "1.0.0",
+  "author": "Take-John",
+  "devDependencies": {
+    "aisenv": "^0.2.0",
+    "aisenv-mk": "workspace:^"
+  }
+}
