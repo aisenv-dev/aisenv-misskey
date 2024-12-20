@@ -2,15 +2,22 @@ import { styleText } from 'node:util';
 import { errors } from 'aisenv';
 import * as readline from 'node:readline/promises';
 
-const dialogTypes = ['error', 'info', 'success', 'warning', 'waiting', 'question'] as const;
+const dialogTypes = [
+    'error',
+    'info',
+    'success',
+    'warning',
+    'waiting',
+    'question',
+] as const;
 
-export type DialogType = typeof dialogTypes[number];
+export type DialogType = (typeof dialogTypes)[number];
 
 export interface DialogProps {
-    type: DialogType,
-    title: string,
-    text: string,
-};
+    type: DialogType;
+    title: string;
+    text: string;
+}
 
 export function checkDialogType(value: string): DialogType {
     const result = dialogTypes.find((validValue) => validValue == value);
@@ -75,7 +82,7 @@ function toIcon(type: DialogType): string {
             return '?';
         }
         default: {
-            (type satisfies never);
+            (type) satisfies never;
             throw new TypeError(`unhandled dialog type: ${type}`);
         }
     }
