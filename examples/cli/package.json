@@ -5,6 +5,6 @@
   "author": "Take-John",
   "devDependencies": {
     "aisenv": "^0.2.0",
-    "aisenv-mk": "workspace:^"
+    "aisenv-misskey": "workspace:^"
   }
 }

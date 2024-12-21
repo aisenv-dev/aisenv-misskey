@@ -1,10 +1,10 @@
 // @ts-check
 
-import aisenvMk from 'aisenv-mk';
+import aisenvMisskey from 'aisenv-misskey';
 
 /** @type {import('aisenv').Config} */
 export default ({
-    addons: [aisenvMk({
+    addons: [aisenvMisskey({
         inMemoryStorage: true,
     })],
 });

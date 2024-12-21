@@ -42,7 +42,7 @@ importers:
       aisenv:
         specifier: ^0.2.0
         version: 0.2.0
-      aisenv-mk:
+      aisenv-misskey:
         specifier: workspace:^
         version: link:../..
 
@@ -51,7 +51,7 @@ importers:
       aisenv:
         specifier: ^0.2.0
         version: 0.2.0
-      aisenv-mk:
+      aisenv-misskey:
         specifier: workspace:^
         version: link:../..
 
