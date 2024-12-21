@@ -1,8 +1,17 @@
-import { utils, values } from 'aisenv';
+import { errors, utils, values } from 'aisenv';
 import * as Misskey from 'misskey-js';
 import { alert, checkDialogType, confirm } from './dialog.js';
+import { Storage } from './storage.js';
 
-export function consts() {
+export interface Options {
+    inMemoryStorage?: boolean;
+    storageKey?: string;
+}
+
+export function consts(opts?: Options) {
+    const storage = new Storage({ inMemory: opts?.inMemoryStorage });
+    const storageKey = opts?.storageKey ?? 'widget';
+
     return {
         'Mk:dialog': values.FN_NATIVE(async ([title, text, type]) => {
             utils.assertString(title);
@@ -30,6 +39,31 @@ export function consts() {
                 text: text.value,
             });
             return answer ? values.TRUE : values.FALSE;
+        }),
+
+        'Mk:save': values.FN_NATIVE(async ([key, value]) => {
+            utils.assertString(key);
+            if (value == null) {
+                throw new errors.AiScriptRuntimeError(
+                    'expected value, but nothing found',
+                );
+            }
+            await storage.setItem(
+                `aiscript:${storageKey}:${key.value}`,
+                JSON.stringify(utils.valToJs(value)),
+            );
+            return values.NULL;
+        }),
+
+        'Mk:load': values.FN_NATIVE(async ([key]) => {
+            utils.assertString(key);
+            const item = await storage.getItem(
+                `aiscript:${storageKey}:${key.value}`,
+            );
+            if (item == null) {
+                return values.NULL;
+            }
+            return utils.jsToVal(JSON.parse(item));
         }),
 
         'Mk:nyaize': values.FN_NATIVE(([text]) => {

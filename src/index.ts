@@ -1,9 +1,9 @@
 import { Addon } from 'aisenv';
-import { consts } from './consts.js';
+import { consts, Options } from './consts.js';
 
-export default (): Addon => {
+export default (opts?: Options): Addon => {
     return {
         name: 'aisenv',
-        consts: consts(),
+        consts: consts(opts),
     };
 };

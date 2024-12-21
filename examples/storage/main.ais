@@ -1,0 +1,9 @@
+Mk:save('a', 1)
+Mk:save('b', 2)
+
+<: Mk:load('a')
+<: Mk:load('b')
+
+Mk:save('a', 3)
+
+<: Mk:load('a')

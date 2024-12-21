@@ -17,7 +17,9 @@
     "author": "Take-John",
     "license": "AGPL-3.0-only",
     "dependencies": {
+        "@keyv/sqlite": "^4.0.1",
         "aisenv": "^0.2.0",
+        "keyv": "^5.2.2",
         "misskey-js": "2024.11.1-alpha.0"
     },
     "devDependencies": {

@@ -1,23 +1,19 @@
-import { Interpreter, Parser, values } from 'aisenv';
+import { values } from 'aisenv';
 import { describe, expect, test } from 'vitest';
-import { consts } from '../src/consts.js';
-
-async function exec(script: string): Promise<values.Value | undefined> {
-    let result: values.Value | undefined;
-    const interpreter = new Interpreter(consts(), {
-        out(value) {
-            result = value;
-        },
-    });
-    const ast = Parser.parse(script);
-    await interpreter.exec(ast);
-    return result;
-}
+import { exec } from './common.js';
 
 describe('consts', () => {
     test.concurrent('Mk:nyaize', async () => {
         await expect(exec('<: Mk:nyaize("な")')).resolves.toStrictEqual(
             values.STR('にゃ'),
         );
+    });
+
+    test.concurrent('Mk:save, Mk:load', async () => {
+        const res = await exec(`
+        Mk:save('a', 1)
+        <: Mk:load('a')
+        `);
+        expect(res).toStrictEqual(values.NUM(1));
     });
 });
