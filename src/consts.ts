@@ -2,6 +2,7 @@ import { errors, utils, values } from 'aisenv';
 import * as Misskey from 'misskey-js';
 import { alert, checkDialogType, confirm } from './dialog.js';
 import { Storage } from './storage.js';
+import { createMisskeyApi } from './misskey-api.js';
 
 export interface EmojiSimple {
     aliases: string[];
@@ -24,6 +25,9 @@ export interface Options {
         LOCALE?: string;
         SERVER_URL?: string;
     };
+    /** 末尾のスラッシュを除いたMisskeyインスタンスのURL (例: `"https://example.com"`) */
+    origin?: string;
+    apiToken?: string;
 }
 
 export function consts(opts?: Options): Record<string, values.Value> {
@@ -38,6 +42,8 @@ export function consts(opts?: Options): Record<string, values.Value> {
         LOCALE,
         SERVER_URL,
     } = constsMock;
+    const origin = opts?.origin;
+    const misskeyApi = origin ? createMisskeyApi(origin + '/api') : undefined;
 
     return {
         USER_ID: USER_ID ? values.STR(USER_ID) : values.NULL,
@@ -75,6 +81,40 @@ export function consts(opts?: Options): Record<string, values.Value> {
                 text: text.value,
             });
             return answer ? values.TRUE : values.FALSE;
+        }),
+
+        'Mk:api': values.FN_NATIVE(async ([ep, param, token]) => {
+            if (misskeyApi == null) {
+                throw new TypeError('cannot use Mk:api when origin is not set');
+            }
+            utils.assertString(ep);
+            if (ep.value.includes('://')) {
+                throw new Error('invalid endpoint');
+            }
+            if (token) {
+                utils.assertString(token);
+                // バグがあればundefinedもあり得るため念のため
+                if (typeof token.value !== 'string') {
+                    throw new Error('invalid token');
+                }
+            }
+            const actualToken: string | null =
+                token?.value ?? opts?.apiToken ?? null;
+            if (param == null) {
+                throw new errors.AiScriptRuntimeError('param required');
+            }
+            return await misskeyApi(
+                ep.value as any,
+                utils.valToJs(param),
+                actualToken,
+            ).then(
+                (res) => {
+                    return utils.jsToVal(res);
+                },
+                (err) => {
+                    return values.ERROR('request_failed', utils.jsToVal(err));
+                },
+            );
         }),
 
         'Mk:save': values.FN_NATIVE(async ([key, value]) => {
