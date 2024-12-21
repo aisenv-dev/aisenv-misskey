@@ -3,16 +3,52 @@ import * as Misskey from 'misskey-js';
 import { alert, checkDialogType, confirm } from './dialog.js';
 import { Storage } from './storage.js';
 
+export interface EmojiSimple {
+    aliases: string[];
+    name: string;
+    category: string | null;
+    url: string;
+    localOnly?: boolean;
+    isSensitive?: boolean;
+    roleIdsThatCanBeUsedThisEmojiAsReaction?: string[];
+}
+
 export interface Options {
     inMemoryStorage?: boolean;
     storageKey?: string;
+    constMocks?: {
+        USER_ID?: string;
+        USER_NAME?: string;
+        USER_USERNAME?: string;
+        CUSTOM_EMOJIS?: EmojiSimple[];
+        LOCALE?: string;
+        SERVER_URL?: string;
+    };
 }
 
-export function consts(opts?: Options) {
+export function consts(opts?: Options): Record<string, values.Value> {
     const storage = new Storage({ inMemory: opts?.inMemoryStorage });
     const storageKey = opts?.storageKey ?? 'widget';
+    const constsMock = opts?.constMocks ?? {};
+    const {
+        USER_ID,
+        USER_NAME,
+        USER_USERNAME,
+        CUSTOM_EMOJIS,
+        LOCALE,
+        SERVER_URL,
+    } = constsMock;
 
     return {
+        USER_ID: USER_ID ? values.STR(USER_ID) : values.NULL,
+        USER_NAME: USER_NAME ? values.STR(USER_NAME) : values.NULL,
+        USER_USERNAME: USER_USERNAME ? values.STR(USER_USERNAME) : values.NULL,
+        CUSTOM_EMOJIS: CUSTOM_EMOJIS
+            ? utils.jsToVal(CUSTOM_EMOJIS)
+            : values.NULL,
+        LOCALE: values.STR(LOCALE ?? 'ja-JP'),
+        SERVER_URL: values.STR(SERVER_URL ?? '.'),
+
         'Mk:dialog': values.FN_NATIVE(async ([title, text, type]) => {
             utils.assertString(title);
             utils.assertString(text);

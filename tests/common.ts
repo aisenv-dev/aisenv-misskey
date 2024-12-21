@@ -1,9 +1,16 @@
 import { Interpreter, Parser, values } from 'aisenv';
-import { consts } from '../src/consts';
+import { consts, Options } from '../src/consts';
 
-export async function exec(script: string): Promise<values.Value | undefined> {
+export async function exec(
+    script: string,
+    opts: Options = {},
+): Promise<values.Value | undefined> {
     let result: values.Value | undefined;
-    const interpreter = new Interpreter(consts({ inMemoryStorage: true }), {
+    opts = {
+        ...opts,
+        inMemoryStorage: true,
+    };
+    const interpreter = new Interpreter(consts(opts), {
         out(value) {
             result = value;
         },
