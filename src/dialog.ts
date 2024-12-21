@@ -1,6 +1,7 @@
 import { styleText } from 'node:util';
 import { errors } from 'aisenv';
 import * as readline from 'node:readline/promises';
+import * as loading from './loading.js';
 
 const dialogTypes = [
     'error',
@@ -27,12 +28,16 @@ export function checkDialogType(value: string): DialogType {
     return result;
 }
 
-export async function alert(props: DialogProps): Promise<void> {
-    await prompt(buildMessage(props) + ' [Enter] ');
+export async function alert({ type, title, text }: DialogProps): Promise<void> {
+    await prompt(buildMessage(title, text) + ' [Enter] ', type);
 }
 
-export async function confirm(props: DialogProps): Promise<boolean> {
-    let answer = await prompt(buildMessage(props) + ' [y/n] ');
+export async function confirm({
+    type,
+    title,
+    text,
+}: DialogProps): Promise<boolean> {
+    let answer = await prompt(buildMessage(title, text) + ' [y/n] ', type);
     while (true) {
         switch (answer) {
             case 'y': {
@@ -42,26 +47,40 @@ export async function confirm(props: DialogProps): Promise<boolean> {
                 return false;
             }
         }
-        answer = await prompt('invalid option [y/n] ');
+        answer = await prompt(
+            styleText('redBright', 'invalid option') + ' [y/n] ',
+            type,
+        );
     }
 }
 
-function buildMessage(props: DialogProps): string {
-    const { type, title, text } = props;
-    return `${toIcon(type)}  ${styleText('bold', title)}  ${text}`;
+function buildMessage(title: string, text: string): string {
+    return `${styleText('bold', title)}  ${text}`;
 }
 
-async function prompt(message: string): Promise<string> {
+async function prompt(message: string, type: DialogType): Promise<string> {
+    if (type == 'waiting') {
+        return loading.prompt(message);
+    } else {
+        return promptSimple(message, type);
+    }
+}
+
+async function promptSimple(
+    message: string,
+    type: Exclude<DialogType, 'waiting'>,
+) {
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
     });
-    const answer = await rl.question(message);
+    const icon = toIcon(type);
+    const answer = await rl.question(`${icon} ${message}`);
     rl.close();
     return answer;
 }
 
-function toIcon(type: DialogType): string {
+function toIcon(type: Exclude<DialogType, 'waiting'>): string {
     switch (type) {
         case 'error': {
             return styleText('redBright', '✗');
@@ -74,9 +93,6 @@ function toIcon(type: DialogType): string {
         }
         case 'warning': {
             return styleText('yellowBright', '⚠');
-        }
-        case 'waiting': {
-            throw new Error('not yet implemented');
         }
         case 'question': {
             return '?';
