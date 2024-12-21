@@ -4,5 +4,7 @@ import aisenvMisskey from 'aisenv-misskey';
 
 /** @type {import('aisenv').Config} */
 export default ({
-    addons: [aisenvMisskey()]
+    addons: [aisenvMisskey({
+        inMemoryStorage: true,
+    })],
 });
